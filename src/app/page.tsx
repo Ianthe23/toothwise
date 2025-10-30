@@ -3,16 +3,23 @@
 import { Input } from "@/components/ui/input";
 import BlurText from "@/components/ui/blur-text";
 import { useState } from "react";
-import { CornerDownLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { CornerDownLeft, Loader2 } from "lucide-react";
 
 export default function Home() {
   const [query, setQuery] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   function submitQuery() {
-    // Replace with your actual submit logic
-    console.log("Submit:", query);
-    // e.g. call API, reset, etc.
-    // setQuery("");
+    if (!query.trim() || isSubmitting) return;
+    setIsSubmitting(true);
+
+    // Simulate processing; then navigate to conversation page with the query
+    const id = Date.now().toString();
+    setTimeout(() => {
+      router.push(`/conversation/${id}?q=${encodeURIComponent(query.trim())}`);
+    }, 3000);
   }
 
   return (
@@ -44,14 +51,20 @@ export default function Home() {
               if (e.key === "Enter") submitQuery();
             }}
             className="w-full rounded-[20px] border-zinc-800 px-4 py-5 pr-12 placeholder:text-zinc-500"
+            disabled={isSubmitting}
           />
           <button
             type="button"
-            aria-label="Submit"
+            aria-label={isSubmitting ? "Loading…" : "Submit"}
             onClick={submitQuery}
-            className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-lg px-2 py-2 bg-transparent opacity-50 text-zinc-100 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-zinc-500"
+            disabled={isSubmitting}
+            className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-lg px-2 py-2 opacity-50 bg-transparent text-zinc-100 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-500 disabled:opacity-60"
           >
-            <CornerDownLeft className="h-4 w-4" />
+            {isSubmitting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <CornerDownLeft className="h-4 w-4" />
+            )}
           </button>
         </div>
       </div>

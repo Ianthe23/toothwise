@@ -6,6 +6,8 @@ import {
   Search,
   Settings,
   MessageCircleMore,
+  Plus, // NEW
+  Trash2, // NEW
 } from "lucide-react";
 
 import {
@@ -33,6 +35,7 @@ import {
 import { ChevronDown } from "lucide-react";
 import React from "react";
 import { NavUser } from "./nav-user";
+import { usePathname, useRouter } from "next/navigation"; // NEW
 
 const items = [
   {
@@ -67,6 +70,67 @@ const dropdowns = [
 
 export function AppSidebar() {
   const [conversationsOpen, setConversationsOpen] = React.useState(true);
+  const pathname = usePathname(); // NEW
+  const router = useRouter(); // NEW
+  const isConversationPage = pathname.startsWith("/conversation"); // NEW
+
+  // NEW: dynamic conversations loaded from localStorage
+  const [conversations, setConversations] = React.useState<
+    { id: string; title: string }[]
+  >([]);
+
+  // Define the stored message shape and a safe type guard to avoid `any`
+  type StoredMessage = {
+    role: "user" | "assistant";
+    content: string;
+    animated?: boolean;
+    edited?: boolean;
+  };
+  function isStoredMessageArray(arr: unknown): arr is StoredMessage[] {
+    return Array.isArray(arr) && arr.every((m) => !!m && typeof m === "object" && "role" in m && "content" in m);
+  }
+
+  // NEW: build list from localStorage `tw-convo:{id}`
+  React.useEffect(() => {
+    try {
+      const convos: { id: string; title: string }[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key || !key.startsWith("tw-convo:")) continue;
+        const id = key.split(":")[1];
+        let title = "Untitled conversation";
+        try {
+          const raw = localStorage.getItem(key);
+          const parsed = raw ? (JSON.parse(raw) as { messages?: unknown }) : null;
+          const msgs = isStoredMessageArray(parsed?.messages) ? parsed!.messages : [];
+          const firstUser = msgs.find((m) => m.role === "user" && typeof m.content === "string");
+          title = (firstUser?.content ?? title).trim();
+        } catch {
+          // ignore malformed entries
+        }
+        if (title.length > 40) title = title.slice(0, 37) + "…";
+        convos.push({ id, title });
+      }
+      setConversations(convos);
+    } catch {
+      setConversations([]);
+    }
+  }, []);
+
+  // NEW: delete by id and refresh list
+  function deleteConversation(id: string) {
+    try {
+      localStorage.removeItem(`tw-convo:${id}`);
+    } catch {
+      // ignore storage errors
+    }
+    setConversations((prev) => prev.filter((c) => c.id !== id));
+  }
+
+  // Existing: go home on new conversation
+  function handleNewConversation() {
+    router.push("/");
+  }
 
   return (
     <Sidebar collapsible="icon">
@@ -74,6 +138,21 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
+              {isConversationPage && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    tooltip="New Conversation"
+                    onClick={handleNewConversation}
+                    className="w-full justify-start rounded-md bg-zinc-800/70 text-zinc-100 hover:bg-zinc-700 border border-zinc-700 shadow-sm transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span className="group-data-[collapsible=icon]:hidden">
+                      New Conversation
+                    </span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+
               {/* Collapsed-only icon trigger */}
               <SidebarMenuItem className="hidden group-data-[collapsible=icon]:block">
                 <SidebarMenuButton
@@ -100,13 +179,29 @@ export function AppSidebar() {
                     </SidebarGroupLabel>
                     <CollapsibleContent>
                       <SidebarMenu>
-                        {items.map((item) => (
-                          <SidebarMenuItem key={item.title}>
+                        {conversations.map((c) => (
+                          <SidebarMenuItem key={c.id}>
                             <SidebarMenuButton asChild>
-                              <a href={item.url}>
-                                <span className="group-data-[collapsible=icon]:hidden">
-                                  {item.title}
+                              <a
+                                href={`/conversation/${c.id}`}
+                                className="relative flex items-center w-full group/item" // CHANGED: named per-item group
+                              >
+                                <span className="truncate group-data-[collapsible=icon]:hidden">
+                                  {c.title}
                                 </span>
+
+                                <button
+                                  type="button"
+                                  aria-label="Delete conversation"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    deleteConversation(c.id);
+                                  }}
+                                  className="ml-auto opacity-0 group-hover/item:opacity-100 transition-opacity text-zinc-400 hover:text-red-400 group-data-[collapsible=icon]:hidden" // CHANGED: reveal only when this row is hovered
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </button>
                               </a>
                             </SidebarMenuButton>
                           </SidebarMenuItem>

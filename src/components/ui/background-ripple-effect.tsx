@@ -23,35 +23,46 @@ export const BackgroundRippleEffect = ({
       ref={ref}
       className={cn(
         "absolute inset-0 h-full w-full pointer-events-auto z-10",
-        "[--cell-border-color:var(--color-neutral-300)] [--cell-fill-color:var(--color-neutral-100)] [--cell-shadow-color:var(--color-neutral-500)]",
-        "dark:[--cell-border-color:var(--color-neutral-700)] dark:[--cell-fill-color:var(--color-neutral-900)] dark:[--cell-shadow-color:var(--color-neutral-800)]"
+        "[--cell-border-color:var(--color-zinc-400)] [--cell-fill-color:var(--color-zinc-200)] [--cell-shadow-color:var(--color-zinc-600)]",
+        "dark:[--cell-border-color:var(--color-zinc-800)] dark:[--cell-fill-color:var(--color-zinc-900)] dark:[--cell-shadow-color:var(--color-zinc-900)]"
       )}
     >
       <div
         className="relative h-auto w-auto overflow-hidden"
         style={{
-          // Fade to transparent at the bottom (works across browsers)
           WebkitMaskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 78%, rgba(0,0,0,0) 100%)",
+            "linear-gradient(to bottom, rgba(0,0,0,1) 82%, rgba(0,0,0,0.55) 92%, rgba(0,0,0,0.2) 97%, rgba(0,0,0,0) 100%)",
           maskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,1) 78%, rgba(0,0,0,0) 100%)",
+            "linear-gradient(to bottom, rgba(0,0,0,1) 82%, rgba(0,0,0,0.55) 92%, rgba(0,0,0,0.2) 97%, rgba(0,0,0,0) 100%)",
         }}
       >
-        <DivGrid
-          key={`base-${rippleKey}`}
-          className="mask-radial-from-20% mask-radial-at-top opacity-600"
-          rows={rows}
-          cols={cols}
-          cellSize={cellSize}
-          borderColor="var(--cell-border-color)"
-          fillColor="var(--cell-fill-color)"
-          clickedCell={clickedCell}
-          onCellClick={(row, col) => {
-            setClickedCell({ row, col });
-            setRippleKey((k) => k + 1);
+        {/* side fade wrapper remains */}
+        <div
+          className="h-full w-full"
+          style={{
+            WebkitMaskImage:
+              "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 6%, rgba(0,0,0,1) 16%, rgba(0,0,0,1) 84%, rgba(0,0,0,0.25) 94%, rgba(0,0,0,0) 100%)",
+            maskImage:
+              "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 6%, rgba(0,0,0,1) 16%, rgba(0,0,0,1) 84%, rgba(0,0,0,0.25) 94%, rgba(0,0,0,0) 100%)",
           }}
-          interactive
-        />
+        >
+          {/* Grid */}
+          <DivGrid
+            key={`base-${rippleKey}`}
+            className="mask-radial-from-20% mask-radial-at-top opacity-600"
+            rows={rows}
+            cols={cols}
+            cellSize={cellSize}
+            borderColor="var(--cell-border-color)"
+            fillColor="var(--cell-fill-color)"
+            clickedCell={clickedCell}
+            onCellClick={(row, col) => {
+              setClickedCell({ row, col });
+              setRippleKey((k) => k + 1);
+            }}
+            interactive
+          />
+        </div>
       </div>
     </div>
   );
