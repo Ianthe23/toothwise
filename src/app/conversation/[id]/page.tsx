@@ -296,11 +296,11 @@ export default function ConversationPage() {
         className="pointer-events-none fixed bottom-0 right-0 z-0 overflow-hidden"
       >
         {/* Larger, darker orb behind */}
-        <div className="h-[800px] w-[1000px] rounded-[48px] opacity-40 blur-3xl bg-[radial-gradient(ellipse_at_center,_rgba(59,130,246,0.2)_0%,_rgba(6,182,212,0.15)_40%,_transparent_75%)] animate-[dropMorph_20s_ease-in-out_infinite] translate-x-1/3 translate-y-1/3" />
+        <div className="h-[800px] w-[1000px] rounded-[48px] blur-3xl bg-[radial-gradient(ellipse_at_center,_rgba(59,130,246,0.2)_0%,_rgba(6,182,212,0.15)_40%,_transparent_75%)] animate-[fadeInDark_1.5s_ease-out_forwards,dropMorph_20s_ease-in-out_infinite_2s] translate-x-1/3 translate-y-1/3 [animation-fill-mode:forwards,none]" />
         {/* Brighter orb in front */}
-        <div className="absolute bottom-0 right-0 h-[500px] w-[700px] rounded-[48px] opacity-80 blur-3xl bg-[radial-gradient(ellipse_at_center,_rgba(59,130,246,0.45)_0%,_rgba(6,182,212,0.3)_40%,_transparent_75%)] animate-[dropMorph_16s_ease-in-out_infinite] translate-x-1/4 translate-y-1/4" />
+        <div className="absolute bottom-0 right-0 h-[500px] w-[700px] rounded-[48px] blur-3xl bg-[radial-gradient(ellipse_at_center,_rgba(59,130,246,0.45)_0%,_rgba(6,182,212,0.3)_40%,_transparent_75%)] animate-[fadeInBright_1.5s_ease-out_0.3s_forwards,dropMorph_16s_ease-in-out_infinite_2.3s] translate-x-1/4 translate-y-1/4 [animation-fill-mode:forwards,none]" />
         {/* Floating tooth image */}
-        <div className="absolute bottom-[100px] right-[150px] animate-[float_6s_ease-in-out_infinite]">
+        <div className="absolute bottom-[100px] right-[150px] animate-[slideUpFadeIn_1.2s_ease-out_0.6s_forwards,float_6s_ease-in-out_infinite_1.8s]">
           <Image
             src="/images/tooth.png"
             alt="Tooth"

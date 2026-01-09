@@ -131,19 +131,19 @@
 
 @keyframes dropMorph {
   0% {
-    transform: translateY(0) rotate(-12deg) scale(1.05, 0.95);
+    transform: translateY(0) rotate(0deg) scale(1, 1);
   }
   25% {
-    transform: translateY(-4px) rotate(0deg) scale(1.1, 0.9);
+    transform: translateY(-4px) rotate(6deg) scale(1.05, 0.95);
   }
   50% {
-    transform: translateY(-8px) rotate(12deg) scale(1.15, 0.85);
+    transform: translateY(-8px) rotate(12deg) scale(1.1, 0.9);
   }
   75% {
-    transform: translateY(-4px) rotate(0deg) scale(1.1, 0.9);
+    transform: translateY(-4px) rotate(6deg) scale(1.05, 0.95);
   }
   100% {
-    transform: translateY(0) rotate(-12deg) scale(1.05, 0.95);
+    transform: translateY(0) rotate(0deg) scale(1, 1);
   }
 }
 
@@ -159,6 +159,35 @@
   }
   75% {
     transform: translateY(-10px) rotate(-2deg);
+  }
+}
+
+@keyframes fadeInDark {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes fadeInBright {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes slideUpFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(200px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
