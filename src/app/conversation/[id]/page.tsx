@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { useSearchParams, useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { CornerDownLeft, Loader2, Pencil } from "lucide-react";
+import Image from "next/image";
 
 type Message = {
   role: "user" | "assistant";
@@ -289,7 +290,28 @@ export default function ConversationPage() {
 
   return (
     <>
-      <div className="mx-auto max-w-3xl w-full h-full px-4 py-8 flex flex-col gap-6 pb-28 relative">
+      {/* Glow background in bottom right corner */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed bottom-0 right-0 z-0 overflow-hidden"
+      >
+        {/* Larger, darker orb behind */}
+        <div className="h-[800px] w-[1000px] rounded-[48px] opacity-40 blur-3xl bg-[radial-gradient(ellipse_at_center,_rgba(59,130,246,0.2)_0%,_rgba(6,182,212,0.15)_40%,_transparent_75%)] animate-[dropMorph_20s_ease-in-out_infinite] translate-x-1/3 translate-y-1/3" />
+        {/* Brighter orb in front */}
+        <div className="absolute bottom-0 right-0 h-[500px] w-[700px] rounded-[48px] opacity-80 blur-3xl bg-[radial-gradient(ellipse_at_center,_rgba(59,130,246,0.45)_0%,_rgba(6,182,212,0.3)_40%,_transparent_75%)] animate-[dropMorph_16s_ease-in-out_infinite] translate-x-1/4 translate-y-1/4" />
+        {/* Floating tooth image */}
+        <div className="absolute bottom-[100px] right-[150px] animate-[float_6s_ease-in-out_infinite]">
+          <Image
+            src="/images/tooth.png"
+            alt="Tooth"
+            width={200}
+            height={200}
+            className="opacity-90 drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)]"
+          />
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-3xl w-full h-full px-4 py-8 flex flex-col gap-6 pb-28 relative z-10">
         {messages.map((msg, i) => {
           const isUser = msg.role === "user";
           const isEditableTarget =
