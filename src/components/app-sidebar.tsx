@@ -8,6 +8,7 @@ import {
   MessageCircleMore,
   Plus, // NEW
   Trash2, // NEW
+  LayoutDashboard, // NEW
 } from "lucide-react";
 
 import {
@@ -216,6 +217,20 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              tooltip="Dashboard"
+              onClick={() => router.push("/dashboard")}
+              className="w-full justify-start rounded-md bg-zinc-800/70 text-zinc-100 hover:bg-zinc-700 border border-zinc-700 shadow-sm transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-2"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              <span className="group-data-[collapsible=icon]:hidden">
+                Dashboard
+              </span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
         <NavUser
           user={{
             name: "Maria Pastin",
